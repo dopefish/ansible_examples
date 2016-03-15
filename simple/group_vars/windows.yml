@@ -1,0 +1,6 @@
+
+ansible_ssh_user: me@DOMAIN
+ansible_ssh_pass: pw
+ansible_ssh_port: 5986
+ansible_connection: winrm
+
