@@ -1,0 +1,93 @@
+---
+- name: Setup WarBerryPi
+  hosts: raspberrypi
+  remote_user: pi
+  become: yes
+  become_user: root
+
+  vars:
+    warberry_basedir:  '/opt/WarBerry'
+    warberry_hostname: 'WarBerry'
+    warberry_aircrack: 'aircrack-ng-1.2-beta1.tar.gz'
+
+  tasks:
+    - hostname: name="{{ warberry_hostname }}"
+
+    - lineinfile: dest=/etc/hosts state=present regexp="^127\.0\.1\.1\t.*$" line="127.0.1.1\t{{ warberry_hostname }}"
+
+    - file: path="{{ item }}" owner='root' group='root' mode='0750' state=directory
+      with_items:
+        - "{{ warberry_basedir }}"
+        - "{{ warberry_basedir }}/Results"
+        - "{{ warberry_basedir }}/Tools"
+        - "{{ warberry_basedir }}/Src"
+        - "{{ warberry_basedir }}/Tools/SysinternalsSuite"
+
+    - file: src="{{ warberry_basedir }}" dest='/home/pi/WarBerry' state=link force=yes
+
+    - apt: pkg={{ item }} state=latest update_cache=yes cache_valid_time=3600
+      with_items:
+        - python-pip
+        - git
+        - rubygems
+        - libssl-dev
+        - iw
+        - nbtscan
+        - python-scapy
+        - tcpdump
+        - nmap
+        - ppp
+        - sg3-utils
+        - netdiscover
+        - macchanger
+        - onesixtyone
+        - nikto
+        - hydra
+        - john
+        - w3af-console
+        - ettercap-text-only
+        - build-essential
+        - ruby-dev
+        - libpcap-dev
+
+    - pip: name={{ item }} state=latest
+      with_items:
+        - python-nmap
+        - ipaddress
+
+    - gem: name={{ item }} state=latest
+      with_items:
+        - bettercap
+
+    - git: repo="https://github.com/secgroundzero/warberry.git" dest="{{ warberry_basedir }}/warberry" force=yes
+
+    - git: repo="{{ item.repo }}" dest="{{ warberry_basedir }}/Tools/{{ item.subdir }}" force=yes
+      with_items:
+        - { repo: 'https://github.com/stasinopoulos/commix.git', subdir: 'commix' }
+        - { repo: 'https://github.com/sqlmapproject/sqlmap.git', subdir: 'sqlmap' }
+        - { repo: 'https://github.com/CoreSecurity/impacket.git', subdir: 'impacket' }
+        - { repo: 'https://github.com/samratashok/nishang.git', subdir: 'nishang' }
+        - { repo: 'https://github.com/SpiderLabs/Responder.git', subdir: 'Responder' }
+        - { repo: 'https://github.com/sophron/wifiphisher.git', subdir: 'wifiphisher' }
+        - { repo: 'https://github.com/DanMcInerney/net-creds.git', subdir: 'net-creds' }
+        - { repo: 'https://github.com/Dionach/CMSmap.git', subdir: 'cmsmap' }
+        - { repo: 'https://github.com/PowerShellMafia/PowerSploit.git', subdir: 'powersploit' }
+
+    - get_url: url=https://download.sysinternals.com/files/SysinternalsSuite.zip dest="{{ warberry_basedir }}/Src/SysinternalsSuite.zip" mode=0440
+      register: warberry_sysinternalssuite_result
+
+    - unarchive: src="{{ warberry_basedir }}/Src/SysinternalsSuite.zip" dest="{{ warberry_basedir }}/Tools/SysinternalsSuite/" copy=no
+      when: warberry_sysinternalssuite_result|changed
+
+    - get_url: url="http://download.aircrack-ng.org/{{ warberry_aircrack }}" dest="{{ warberry_basedir }}/Src/{{ warberry_aircrack }}" mode=0440
+      register: warberry_aircrack_result
+
+    - unarchive: src="{{ warberry_basedir }}/Src/{{ warberry_aircrack }}" dest="{{ warberry_basedir }}/Src/" copy=no
+      when: warberry_aircrack_result|changed
+
+    - command: chdir="{{ warberry_basedir }}/Src/{{ warberry_aircrack|replace(".tar.gz", "") }}/" {{ item }}
+      when: warberry_aircrack_result|changed
+      with_items:
+        - make
+        - make install
+        - airodump-ng-oui-update
