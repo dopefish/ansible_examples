@@ -1,0 +1,12 @@
+---
+
+- name: securityrat server
+  hosts: 10.0.0.1
+  remote_user: root
+  vars:
+    securityrat_db_password: EMNKxy4JYzLgXh9Dwm7Lduna
+    securityrat_keystore_password: BtnIMeJno7XPWESsUUecVrJh
+    securityrat_jhipster_rememberme: T8XVX01uCWn35PyXrDMIqTmW
+  roles:
+    - { role: securityrat }
+

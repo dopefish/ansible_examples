@@ -1,0 +1,58 @@
+---
+#-------------------------------------------------------------------------------
+#
+# Tasks for securityrat
+#
+#-------------------------------------------------------------------------------
+
+
+- name: Add the OS specific varibles
+  include_vars: "{{ ansible_distribution }}.yml"
+  tags:
+    - packages
+    - filesystem
+    - firewall
+
+- apt: pkg="{{ item }}" state=present
+  when: ansible_distribution == 'Ubuntu'
+  with_items:
+    - "{{ securityrat_apt_base }}"
+    - "{{ vars[securityrat_apt_additional] }}"
+
+- yum: name="{{ item }}" state=present
+  when: ansible_distribution == 'CentOS'
+  with_items:
+    - "{{ securityrat_yum_base }}"
+    - "{{ vars[securityrat_yum_additional] }}"
+
+- npm: name="{{ item }}" global=yes
+  with_items:
+    - "{{ securityrat_npm_packages }}"
+
+- name: Role specific directories
+  file: path={{ item.path }} owner={{ item.owner }} group={{ item.group }} mode={{ item.mode }} state=directory
+  with_items: "{{ securityrat_dirs }}"
+  tags:
+    - filesystem
+
+- name: Download git repository
+  git: repo=https://github.com/SecurityRAT/SecurityRAT.git dest="{{ securityrat_basedir }}/SecurityRAT" update=no version={{ securityrat_version }}
+
+- name: MySQL Database
+  mysql_db: name={{ securityrat_db_name }} encoding=utf8 state=present
+
+- name: MySQL permissions
+  mysql_user: name={{ securityrat_db_user }} password={{ securityrat_db_password }} priv={{ securityrat_db_name }}.*:ALL state=present
+
+- name: Role specific files
+  copy: src={{ item.local }} dest={{ item.remote }} owner={{ item.owner }} group={{ item.group }} mode={{ item.mode }}
+  with_items: "{{ securityrat_files }}"
+  tags:
+    - filesystem
+
+- name: Role specific files (templates)
+  template: src={{ item.local }} dest={{ item.remote }} owner={{ item.owner }} group={{ item.group }} mode={{ item.mode }}
+  with_items: "{{ securityrat_templates }}"
+  tags:
+    - filesystem
+

@@ -55,9 +55,9 @@
         - python-nmap
         - ipaddress
 
-    - gem: name={{ item }} state=latest
-      with_items:
-        - bettercap
+#    - gem: name={{ item }} state=latest
+#      with_items:
+#        - bettercap
 
     - git: repo="https://github.com/secgroundzero/warberry.git" dest="{{ warberry_basedir }}/warberry" force=yes
 
