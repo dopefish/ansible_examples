@@ -1,7 +1,7 @@
 # SecurityRAT setup
 Simple ansible role to set up https://github.com/SecurityRAT on a server. It uses FORM authentication by default to get you up and running fast. This only sets up the basic system.
 
-If you want to run the server in `dev` mode, follow the [SecurityRAT Readme](https://github.com/SecurityRAT/SecurityRAT/blob/master/README.md) instructions on how to create the `keystore.p12` file and how to start the application in developerment mode.
+If you want to run the server in `dev` mode, follow the [SecurityRAT Readme](https://github.com/SecurityRAT/SecurityRAT/blob/master/README.md) instructions on how to create the `keystore.p12` file and how to start the application in development mode.
 
 If you want to run in `prod` mode, follow the [SecurityRAT Readme](https://github.com/SecurityRAT/SecurityRAT/blob/master/README.md) instructions for packaging the application for production environments.
 
