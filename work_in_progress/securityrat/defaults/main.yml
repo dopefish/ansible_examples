@@ -63,6 +63,6 @@ securityrat_yum_centos_5: []
 securityrat_yum_centos_6: []
 
 # next two get set in vars/$OS.yml
-# ust need a default setting here
+# just need a default setting here
 securityrat_yum_additional: "securityrat_yum_base"
 securityrat_apt_additional: "securityrat_apt_base"
