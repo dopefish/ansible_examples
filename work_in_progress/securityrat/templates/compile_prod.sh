@@ -1,2 +1,2 @@
 #!/bin/bash
-sudo -u "{{ securityrat_local_user }}" mvn -Pprod -DskipTests package
+sudo --set-home --user="{{ securityrat_local_user }}" mvn -Pprod -DskipTests package
