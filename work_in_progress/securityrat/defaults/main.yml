@@ -13,21 +13,20 @@ securityrat_db_name: 'securityrat'
 securityrat_db_user: 'securityrat'
 securityrat_db_host: 'localhost'
 
+
+securityrat_local_user: devuser
+securityrat_local_group: devgroup
+
 # you will want to set the following 3 passwords e.g. in your playbook
 securityrat_db_password:
 securityrat_keystore_password:
 securityrat_jhipster_rememberme:
 
-securityrat_dirs: []
-#  - { path: '/file',       owner: 'root', group: 'root', mode: '0750' }
-
-securityrat_files: []
-#  - { local: 'file',       remote: "{{ securityrat_basedir }}/file",        owner: 'root', group: 'root', mode: '0640' }
-
 securityrat_templates:
-  - { local: 'application-dev.yml',   remote: "{{ securityrat_basedir }}/SecurityRAT/src/main/resources/config/application-dev.yml",    owner: 'root', group: 'root', mode: '0640' }
-  - { local: 'application-prod.yml',  remote: "{{ securityrat_basedir }}/SecurityRAT/src/main/resources/config/application-prod.yml",   owner: 'root', group: 'root', mode: '0640' }
-  - { local: 'application.yml',       remote: "{{ securityrat_basedir }}/SecurityRAT/src/main/resources/config/application.yml",        owner: 'root', group: 'root', mode: '0640' }
+  - { local: 'application-dev.yml',   remote: "{{ securityrat_basedir }}/SecurityRAT/src/main/resources/config/application-dev.yml",    owner: "{{ securityrat_local_user }}", group: "{{ securityrat_local_group }}", mode: '0640' }
+  - { local: 'application-prod.yml',  remote: "{{ securityrat_basedir }}/SecurityRAT/src/main/resources/config/application-prod.yml",   owner: "{{ securityrat_local_user }}", group: "{{ securityrat_local_group }}", mode: '0640' }
+  - { local: 'application.yml',       remote: "{{ securityrat_basedir }}/SecurityRAT/src/main/resources/config/application.yml",        owner: "{{ securityrat_local_user }}", group: "{{ securityrat_local_group }}", mode: '0640' }
+  - { local: 'compile_prod.sh',       remote: "{{ securityrat_basedir }}/SecurityRAT/compile_prod.sh",                                  owner: "{{ securityrat_local_user }}", group: "{{ securityrat_local_group }}", mode: '0750' }
 
 securityrat_apt_base:
   - git
@@ -48,6 +47,7 @@ securityrat_npm_packages:
   - generator-jhipster
   - gulp-cli
   - bower
+  - grunt
 
 securityrat_apt_ubuntu_12: []
 #  - foo-utils-1.2

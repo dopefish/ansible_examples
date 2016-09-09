@@ -29,14 +29,17 @@
   with_items:
     - "{{ securityrat_npm_packages }}"
 
-- name: Role specific directories
-  file: path={{ item.path }} owner={{ item.owner }} group={{ item.group }} mode={{ item.mode }} state=directory
-  with_items: "{{ securityrat_dirs }}"
-  tags:
-    - filesystem
+- name: ensure dev group exist
+  group: name={{ securityrat_local_group }} state=present
+
+- name: ensure dev user exists
+  user: name={{ securityrat_local_user }} group={{ securityrat_local_group }} home="{{ securityrat_basedir }}/SecurityRAT" system=yes createhome=no state=present
 
 - name: Download git repository
   git: repo=https://github.com/SecurityRAT/SecurityRAT.git dest="{{ securityrat_basedir }}/SecurityRAT" update=no version={{ securityrat_version }}
+
+- name: Change ownership of checked out files
+  file: path="{{ securityrat_basedir }}/SecurityRAT" owner="{{ securityrat_local_user }}" group="{{ securityrat_local_group }}" recurse=yes
 
 - name: MySQL Database
   mysql_db: name={{ securityrat_db_name }} encoding=utf8 state=present
@@ -44,15 +47,10 @@
 - name: MySQL permissions
   mysql_user: name={{ securityrat_db_user }} password={{ securityrat_db_password }} priv={{ securityrat_db_name }}.*:ALL state=present
 
-- name: Role specific files
-  copy: src={{ item.local }} dest={{ item.remote }} owner={{ item.owner }} group={{ item.group }} mode={{ item.mode }}
-  with_items: "{{ securityrat_files }}"
-  tags:
-    - filesystem
-
 - name: Role specific files (templates)
   template: src={{ item.local }} dest={{ item.remote }} owner={{ item.owner }} group={{ item.group }} mode={{ item.mode }}
   with_items: "{{ securityrat_templates }}"
   tags:
     - filesystem
-
+  become: true
+  become_user: "{{ securityrat_local_user }}"
