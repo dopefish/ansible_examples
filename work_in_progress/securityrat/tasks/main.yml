@@ -43,9 +43,11 @@
 
 - name: MySQL Database
   mysql_db: name={{ securityrat_db_name }} encoding=utf8 state=present
+  when: securityrat_mode == 'dev'
 
 - name: MySQL permissions
   mysql_user: name={{ securityrat_db_user }} password={{ securityrat_db_password }} priv={{ securityrat_db_name }}.*:ALL state=present
+  when: securityrat_mode == 'dev'
 
 - name: Role specific files (templates)
   template: src={{ item.local }} dest={{ item.remote }} owner={{ item.owner }} group={{ item.group }} mode={{ item.mode }}
@@ -54,3 +56,7 @@
     - filesystem
   become: true
   become_user: "{{ securityrat_local_user }}"
+
+- name: compile .war file
+  command: "{{ securityrat_basedir }}/SecurityRAT/compile_prod.sh"
+  when: securityrat_mode == 'prod'

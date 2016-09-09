@@ -13,6 +13,8 @@ securityrat_db_name: 'securityrat'
 securityrat_db_user: 'securityrat'
 securityrat_db_host: 'localhost'
 
+# mode can be prod or dev
+securityrat_mode: prod
 
 securityrat_local_user: devuser
 securityrat_local_group: devgroup
@@ -23,10 +25,11 @@ securityrat_keystore_password:
 securityrat_jhipster_rememberme:
 
 securityrat_templates:
-  - { local: 'application-dev.yml',   remote: "{{ securityrat_basedir }}/SecurityRAT/src/main/resources/config/application-dev.yml",    owner: "{{ securityrat_local_user }}", group: "{{ securityrat_local_group }}", mode: '0640' }
-  - { local: 'application-prod.yml',  remote: "{{ securityrat_basedir }}/SecurityRAT/src/main/resources/config/application-prod.yml",   owner: "{{ securityrat_local_user }}", group: "{{ securityrat_local_group }}", mode: '0640' }
-  - { local: 'application.yml',       remote: "{{ securityrat_basedir }}/SecurityRAT/src/main/resources/config/application.yml",        owner: "{{ securityrat_local_user }}", group: "{{ securityrat_local_group }}", mode: '0640' }
-  - { local: 'compile_prod.sh',       remote: "{{ securityrat_basedir }}/SecurityRAT/compile_prod.sh",                                  owner: "{{ securityrat_local_user }}", group: "{{ securityrat_local_group }}", mode: '0750' }
+  - { local: 'application-dev.yml',  remote: "{{ securityrat_basedir }}/SecurityRAT/src/main/resources/config/application-dev.yml",  owner: "{{ securityrat_local_user }}", group: "{{ securityrat_local_group }}", mode: '0640' }
+  - { local: 'application-prod.yml', remote: "{{ securityrat_basedir }}/SecurityRAT/src/main/resources/config/application-prod.yml", owner: "{{ securityrat_local_user }}", group: "{{ securityrat_local_group }}", mode: '0640' }
+  - { local: 'application.yml',      remote: "{{ securityrat_basedir }}/SecurityRAT/src/main/resources/config/application.yml",      owner: "{{ securityrat_local_user }}", group: "{{ securityrat_local_group }}", mode: '0640' }
+  - { local: 'compile_prod.sh',      remote: "{{ securityrat_basedir }}/SecurityRAT/compile_prod.sh",                                owner: "{{ securityrat_local_user }}", group: "{{ securityrat_local_group }}", mode: '0750' }
+  - { local: 'run_dev.sh',           remote: "{{ securityrat_basedir }}/SecurityRAT/run_dev.sh",                                     owner: "{{ securityrat_local_user }}", group: "{{ securityrat_local_group }}", mode: '0750' }
 
 securityrat_apt_base:
   - git
