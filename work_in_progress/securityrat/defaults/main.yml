@@ -14,7 +14,7 @@ securityrat_db_user: 'securityrat'
 securityrat_db_host: 'localhost'
 
 # mode can be prod or dev
-securityrat_mode: prod
+securityrat_mode: dev
 
 securityrat_local_user: devuser
 securityrat_local_group: devgroup
