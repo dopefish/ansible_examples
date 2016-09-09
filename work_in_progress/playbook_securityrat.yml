@@ -7,6 +7,9 @@
     securityrat_db_password: EMNKxy4JYzLgXh9Dwm7Lduna
     securityrat_keystore_password: BtnIMeJno7XPWESsUUecVrJh
     securityrat_jhipster_rememberme: T8XVX01uCWn35PyXrDMIqTmW
+    # unpriviledged user to store and run the code as, will be created if it doesn't exist
+    securityrat_local_user: devuser
+    securityrat_local_group: devgroup
   roles:
     - { role: securityrat }
 
