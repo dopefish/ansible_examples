@@ -1,0 +1,43 @@
+---
+
+- name: restart apache2
+  service: name=apache2 state=restarted
+
+- name: reload apache2
+  service: name=apache2 state=reloaded
+
+- name: restart nginx
+  command: nginx -t
+  notify: config verified OK, restart nginx
+
+- name: config verified OK, restart nginx
+  service: name=nginx state=restarted
+
+- name: reload nginx
+  service: name=nginx state=reloaded
+
+- name: restart uwsgi
+  debug: msg='restart uwsgi'
+  changed_when: true
+  notify:
+    - stop uwsgi
+    - start uwsgi
+
+- name: start uwsgi
+  service: name=uwsgi status=started
+
+- name: stop uwsgi
+  service: name=uwsgi status=stopped
+
+- name: restart mysql
+  service: name=mysql state=restarted
+
+- name: restart ssh
+  service: name=ssh state=restarted
+
+- name: sysctl reload
+  shell: sysctl --system
+
+- name: reload systemd
+  shell: systemctl daemon-reload
+

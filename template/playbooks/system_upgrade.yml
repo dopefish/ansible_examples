@@ -1,0 +1,7 @@
+---
+- name: Upgrade apt packages
+  hosts: apt
+  remote_user: root
+  roles:
+    - action/apt-upgrade
+

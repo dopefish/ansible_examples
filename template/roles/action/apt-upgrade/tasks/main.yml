@@ -1,0 +1,28 @@
+---
+
+- name: install required packages
+  apt: pkg=aptitude state=latest  
+
+- name: update apt cache
+  apt: update_cache=yes
+  changed_when: false
+
+- name: apt cleanup
+  command: apt-get -y autoremove
+  register: apt_result
+  changed_when: "apt_result.rc != 0"
+
+- name: install any outstanding package updates (safe-upgrade)
+  apt: upgrade=safe
+  register: packageupdate
+  poll: 15
+  async: 3600
+
+- name: apt cleanup
+  command: apt-get -y clean
+  register: apt_result
+  changed_when: "apt_result.rc != 0"
+
+- debug: var=packageupdate.stdout_lines
+  when: packageupdate|changed
+

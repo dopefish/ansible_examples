@@ -1,0 +1,8 @@
+---
+- name: ping
+  hosts: all
+  tasks:
+  - ping:
+    when: ansible_system == 'Linux'
+  - win_ping:
+    when: ansible_system == 'Win32NT'
